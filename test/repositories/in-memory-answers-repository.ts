@@ -4,6 +4,12 @@ import { Answer } from '@/domain/forum/enterprise/entities/answer'
 export class InMemoryAnswersRepository implements AnswersRepository {
   public items: Answer[] = []
 
+  async save(answer: Answer) {
+    const itemIndex = this.items.findIndex((item) => item.id === answer.id)
+
+    this.items[itemIndex] = answer
+  }
+
   async delete(answer: Answer) {
     const itemIndex = this.items.findIndex((item) => item.id === answer.id)
 
