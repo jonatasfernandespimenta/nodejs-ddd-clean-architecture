@@ -1,4 +1,7 @@
+import { Either, left, right } from '@/core/either'
 import { QuestionRepository } from '../repositories/question-repository'
+import { ResourceNotFoundError } from './errors/resource-not-found-error'
+import { NotAllowerdError } from './errors/not-allowed-error'
 
 interface EditQuestionUseCaseRequest {
   authorId: string
@@ -8,7 +11,7 @@ interface EditQuestionUseCaseRequest {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface EditQuestionUseCaseResponse {}
+type EditQuestionUseCaseResponse = Either<ResourceNotFoundError, NotAllowerdError | {}>
 
 export class EditQuestionUseCase {
   constructor(private questionsRepository: QuestionRepository) {}
@@ -22,11 +25,11 @@ export class EditQuestionUseCase {
     const question = await this.questionsRepository.findById(questionId)
 
     if (!question) {
-      throw Error('Question not found')
+      return left(new ResourceNotFoundError())
     }
 
     if (authorId !== question.authorId.toString()) {
-      throw new Error('Not Allowed')
+      return left(new NotAllowerdError())
     }
 
     question.title = title
@@ -34,6 +37,6 @@ export class EditQuestionUseCase {
 
     await this.questionsRepository.save(question)
 
-    return {}
+    return right({})
   }
 }

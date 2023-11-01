@@ -43,11 +43,11 @@ describe('Chose Question Best Answer', () => {
     await inMemoryQuestionssRepository.create(question)
     await inMemoryAnswersRepository.create(answer)
 
-    expect(() => {
-      return sut.execute({
-        answerId: answer.id.toString(),
-        authorId: 'author-2',
-        })
-    }).rejects.toBeInstanceOf(Error)
+    const result = await sut.execute({
+      answerId: answer.id.toString(),
+      authorId: 'author-2',
+      })
+
+    expect(result.isLeft()).toBeTruthy()
   })
 })

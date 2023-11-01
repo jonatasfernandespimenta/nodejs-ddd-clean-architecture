@@ -42,15 +42,14 @@ describe('Edit question', () => {
 
     inMemoryQuestionsRepository.create(newQuestion)
 
-    expect(() => {
-      return sut.execute({
-        questionId: 'question-1',
-        authorId: 'author-2',
-        title: 'Pergunta teste',
-        content: 'Conteudo Teste'
-      })
-    }).rejects.toBeInstanceOf(Error)
+    const result = await sut.execute({
+      questionId: 'question-1',
+      authorId: 'author-2',
+      title: 'Pergunta teste',
+      content: 'Conteudo Teste'
+    })
 
+    expect(result.isLeft()).toBeTruthy()
     expect(inMemoryQuestionsRepository.items).toHaveLength(1)
   })
 })
